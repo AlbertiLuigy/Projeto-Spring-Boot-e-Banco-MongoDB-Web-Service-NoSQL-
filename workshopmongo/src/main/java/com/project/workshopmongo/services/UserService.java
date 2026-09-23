@@ -30,6 +30,11 @@ public class UserService {
         return repo.insert(obj);
     }
 
+    public void delete(String id){ //função delete() é um método que exclui um usuário do banco de dados. Ele recebe um objeto User como parâmetro e utiliza o repositório UserRepository para excluir o usuário do banco de dados.
+        findById(id);
+        repo.deleteById(id);
+    }   
+
     public User fromDTO(UserDTO objdto){
             return new User(objdto.getId(), objdto.getName(), objdto.getEmail());
     }
