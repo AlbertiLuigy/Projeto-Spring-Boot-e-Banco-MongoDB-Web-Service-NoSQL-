@@ -30,6 +30,17 @@ public class UserService {
         return repo.insert(obj);
     }
 
+    public User update(User obj){
+        User newObj = findById(obj.getId());
+        updateData(newObj, obj);
+        return repo.save(newObj); 
+    }
+    
+    private void updateData(User newObj, User obj) {
+		newObj.setName(obj.getName());
+		newObj.setEmail(obj.getEmail());
+	}
+
     public void delete(String id){ //função delete() é um método que exclui um usuário do banco de dados. Ele recebe um objeto User como parâmetro e utiliza o repositório UserRepository para excluir o usuário do banco de dados.
         findById(id);
         repo.deleteById(id);
