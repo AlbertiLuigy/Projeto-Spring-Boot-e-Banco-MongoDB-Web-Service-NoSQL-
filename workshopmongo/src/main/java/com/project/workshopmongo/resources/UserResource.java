@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.project.workshopmongo.domain.Post;
 import com.project.workshopmongo.domain.User;
+import com.project.workshopmongo.dto.PostDTO;
 import com.project.workshopmongo.dto.UserDTO;
 import com.project.workshopmongo.services.UserService;
 
@@ -29,21 +29,20 @@ public class UserResource {
     @Autowired 
     private UserService service;
 
-    @GetMapping 
+    @GetMapping // Buscar todos os usuários
     public ResponseEntity<List<UserDTO>> findAll(){
-
         List<User> list = service.findAll();
         List<UserDTO> listDto = list.stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
         return ResponseEntity.ok().body(listDto);
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/{id}") // Buscar usuário por ID
     public ResponseEntity<UserDTO> findById(@PathVariable String id){
         User obj = service.findById(id);
         return ResponseEntity.ok().body(new UserDTO(obj));
     }   
 
-    @PutMapping (value="/{id}")
+    @PutMapping (value="/{id}") // Atualizar usuário por ID
  	public ResponseEntity<Void> update(@RequestBody UserDTO objDto, @PathVariable String id) {
 		User obj = service.fromDTO(objDto);
 		obj.setId(id);
@@ -51,13 +50,13 @@ public class UserResource {
 		return ResponseEntity.noContent().build();
 	}
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/{id}") // Excluir usuário por ID
     public ResponseEntity<Void> delete(@PathVariable String id){
         service.delete(id);
         return ResponseEntity.noContent().build();
     }  
     
-    @PostMapping 
+    @PostMapping // Inserir um novo usuário
     public ResponseEntity<Void> insert(@RequestBody UserDTO objDTO){
         User obj = service.fromDTO(objDTO);
         obj = service.insert(obj);
@@ -67,9 +66,10 @@ public class UserResource {
     }  
 
 
-    @GetMapping(value = "/{id}/posts")
-    public ResponseEntity<List<Post>> findPosts(@PathVariable String id){
+    @GetMapping(value = "/{id}/posts") // Buscar posts de um usuário por ID
+    public ResponseEntity<List<PostDTO>> findPosts(@PathVariable String id){
         User obj = service.findById(id);
-        return ResponseEntity.ok().body(obj.getPosts());
+        List<PostDTO> listDto = obj.getPosts().stream().map(x -> new PostDTO(x)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
     }   
 }
