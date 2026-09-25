@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import com.project.workshopmongo.domain.Post;
 import com.project.workshopmongo.domain.User;
 import com.project.workshopmongo.dto.AuthorDTO;
+import com.project.workshopmongo.dto.CommentDTO;
 import com.project.workshopmongo.repository.PostRepository;
 import com.project.workshopmongo.repository.UserRepository;
 
@@ -22,7 +23,7 @@ public class Instantiation implements CommandLineRunner{
 
     @Autowired 
     private  PostRepository postReposiroty;
-
+    
     @Override
     public void run(String... args) throws Exception {
         
@@ -44,6 +45,10 @@ public class Instantiation implements CommandLineRunner{
 
         postReposiroty.saveAll(Arrays.asList(post1, post2));
 
+        CommentDTO comment1 = new CommentDTO("Bom post!", sdf.parse("21/03/2018"), new AuthorDTO(alex));
+        post1.getComments().add(comment1);
+        postReposiroty.save(post1);
+        
         maria.getPosts().addAll(Arrays.asList(post1, post2));
         userRepository.saveAll(Arrays.asList(maria));
     }
