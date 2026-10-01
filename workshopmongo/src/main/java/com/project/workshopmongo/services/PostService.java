@@ -53,4 +53,8 @@ public class PostService {
     public Post fromDTO(PostDTO objDTO){ // Converter DTO para entidade Post
         return new Post(objDTO.getId(), objDTO.getDate(), objDTO.getTitle(), objDTO.getBody(), objDTO.getAuthor());
     }
+
+    public List<Post> findByTitle(String text) {
+        return repo.findByTitleContainingIgnoreCase(text);
+    }
 }
