@@ -11,24 +11,11 @@ import com.project.workshopmongo.domain.Post;
 
 @Repository 
 public interface PostRepository extends MongoRepository<Post, String> {
-    // Buscar posts por título (contendo texto - case insensitive)
     @Query("{ 'title': { $regex: ?0, $options: 'i' } }")
-    List<Post> findByTitleContaining(String text);
+    List<Post> searchTitle(String text);
 
-    // OU usando método com query derivation:
     List<Post> findByTitleContainingIgnoreCase(String title);
 
-    // Buscar posts do autor por ID
-    List<Post> findByAuthorId(String authorId);
-
-    // Buscar posts entre duas datas
-    List<Post> findByDateBetween(Date startDate, Date endDate);
-
-    // Buscar texto no corpo do post
-    @Query("{ 'body': { $regex: ?0, $options: 'i' } }")
-    List<Post> findByBodyContaining(String text);
-
-    // Buscar full text em título E corpo
-    @Query("{ $or: [ { 'title': { $regex: ?0, $options: 'i' } }, { 'body': { $regex: ?0, $options: 'i' } } ] }")
-    List<Post> fullTextSearch(String text);
+    @Query("{ $and: [ { date: {$gte: ?1} }, { date: { $lte: ?2} } , { $or: [ { 'title': { $regex: ?0, $options: 'i' } }, { 'body': { $regex: ?0, $options: 'i' } }, { 'comments.text': { $regex: ?0, $options: 'i' } } ] } ] }")
+    List<Post> fullSearch(String text, Date minDate, Date maxDate);
 }
